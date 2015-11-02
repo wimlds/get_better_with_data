@@ -8,6 +8,7 @@ Borrowed a good bit of code from this project https://github.com/maxhodak/csv2sq
 import MySQLdb
 import csv
 import argparse
+import getpass
 
 
 class Csv2MySQL(object):
@@ -55,8 +56,6 @@ class Csv2MySQL(object):
             return False
 
     def generate(self):
-        # for x in xrange(500):
-        #     row = self.csvreader.next()
         for row in self.csvreader:
             for i, header in enumerate(self.headers):
                 col = row[i]
@@ -95,7 +94,11 @@ class Csv2MySQL(object):
             if (i % batch_size == 0 and i > 0) or row is None:
                 sql = sql[:-1] + ";"
                 with self._get_mysql_conn() as cur:
-                    cur.execute(sql)
+                    try:
+                        cur.execute(sql)
+                    except Exception as e:
+                        print "FAILED loading data into MySQL with: {0}".format(str(e))
+                        print sql + "\n\n"
 
                 sql = "INSERT INTO `{0}`.`{1}` VALUES ".format(self.database, self.table)
                 print "inserted {0} rows in {1}.{2}".format(i, self.database, self.table)
@@ -119,15 +122,17 @@ def args():
     parser.add_argument('db_table', help='MySQL table to create', type=str)
     parser.add_argument('db_host', help='DB host', type=str)
     parser.add_argument('db_user', help='DB user', type=str)
-    parser.add_argument('password', help='DB user\'s password', type=str)
     return parser.parse_args()
 
 
 def main():
     a = args()
 
+    # Get PW input from user
+    pw = getpass.getpass("Please enter password for {0}: ".format(a.db_user))
+
     # Create object for translating CSV to SQL creation statements
-    csv2mysql = Csv2MySQL(a.csv_file, a.database, a.db_table, a.db_host, a.db_user, a.password)
+    csv2mysql = Csv2MySQL(a.csv_file, a.database, a.db_table, a.db_host, a.db_user, pw)
 
     print "Inferring column types..."
     csv2mysql.generate()
