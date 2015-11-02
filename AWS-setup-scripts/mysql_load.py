@@ -108,7 +108,7 @@ class Csv2MySQL(object):
             # Build INSERT statement
             sql += '('
             for col in row:
-                col_str = 'NULL,' if col == '' else "'{}',".format(col.replace('"', '\"').replace("'", "\\'"))
+                col_str = 'NULL,' if col == '' else "'{0}',".format(col.replace('"', '\"').replace("'", "\\'"))
                 sql += col_str
             sql = sql[:-1] + "),"
 
