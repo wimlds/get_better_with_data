@@ -85,7 +85,7 @@ class Csv2MySQL(object):
         self.csvreader = csv.reader(self.csvfile, self.dialect)
         self.csvreader.next()
 
-        batch_size = 1000
+        batch_size = 5000
         sql = "INSERT INTO `{0}`.`{1}` VALUES ".format(self.database, self.table)
         i = 0
         while True:
