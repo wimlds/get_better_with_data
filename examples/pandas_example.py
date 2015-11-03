@@ -15,7 +15,7 @@ cnxn = pymysql.connect(host='health-db-internet.c6clocfz5zxy.us-east-1.rds.amazo
 sql_command = \
 'select distinct(d.Recipient_State), '\
     'avg(d.Total_Amount_of_Payment_USDollars) '\
-    'from CMS_open_payments_2014.general_payment_data d '\
+    'from CMS_open_payments_2013.general_payment_data d '\
     'where d.Physician_Specialty like \'{}\' '\
         'group by d.Physician_Specialty, d.Recipient_State;'.format('%Allopathic%')
 
