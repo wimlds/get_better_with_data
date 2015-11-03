@@ -15,10 +15,11 @@ conn_cms <- dbConnect(MySQL(),user="data_hacker",
 # For example, let's figure out how much each state paid in 2014 for Allopathic care
 result <- dbGetQuery(conn_cms,"select distinct(d.Recipient_State),
 avg(d.Total_Amount_of_Payment_USDollars)
-from CMS_open_payments_2014.general_payment_data d
+from CMS_open_payments_2013.general_payment_data d
 where d.Physician_Specialty like '%Allopathic%' 
 group by d.Physician_Specialty, d.Recipient_State;"); 
 
 # Make sure you close your connection to the database. 
 #You will need to connect again if you want to run another query. 
 dbDisconnect(conn_cms);
+
